@@ -1,0 +1,16 @@
+
+
+arcwall ();
+
+
+
+
+module arcwall(r=10,h=5,t=1,s=16,a=180){
+	for (i=0:s-1){
+		hull(){
+			rotate ([0,0,a/s*i]) translate ([r,0,0]) cylinder(r=t/2,height=h);
+			rotate ([0,0,a/s*(i+1)]) translate ([r,0,0]) cylinder(r=t/2,height=h);
+		}
+	}
+}
+			

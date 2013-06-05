@@ -1,0 +1,17 @@
+
+
+// design a simple spool for winding Archemedes Spiral
+
+gap=4.8;// distance between arms of the spiral
+axel = 3/8*25.4; //diameter of the center dowel
+
+arch_spool (gap,axel,30);
+cylinder (r=gap/2*pi*3,l=0.25); //disk to help hold the print down
+
+
+module arch_spool (gap,axel,len){
+	difference (){
+		cylinder (r=gap/2*pi,l=len);
+		cylinder (r=axel/2+0.25,l=len);
+	}
+}
