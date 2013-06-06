@@ -8,7 +8,7 @@ ni = 1.0905e-3;  //bulk resistivity of 80-20 Nichrome wire Ohm-mm
 rm=170;
 watts = 250;
 volts=23;
-echo (res(watts,volts)*4,awg_dia(22),wire_len(watts/wedges,volts,24,ni));
+echo (res(watts,volts)*4,awg_dia(22),wire_len(watts/wedges,volts,28,ni));
 
 /*
 union() {
@@ -27,6 +27,8 @@ rotate ([0,0,90]) {
 */
 //sprials();
 serpentine_jig ();
+//arcwall (r=100,h=5,t=1,s=8,a=45);
+//rotate ([0,0,22.5]) translate ([100,0,0]) peg (4,5,1);
 
 module sprials(){
 rotate ([0,0,240]) arche_wall (ro=170,ri=42*1/3,gap=42,h=3,t=5,s=360);
@@ -43,9 +45,9 @@ rotate ([0,0,0]) arche_wall (ro=170,ri=42*3/3,gap=42,h=3,t=5,s=360);
 }
 
 module serpentine_jig(){
-	arcs(g=13.1,rm=170,n=12);	
+	arcs(g=20,rm=170,n=8);	
 	$fn=16;
-	translate ([0,0,3]) pegs(g=20.6,rm=170,n=8);
+	translate ([0,0,3]) pegs(g=20,rm=170,n=8);
 }
 
 
@@ -141,6 +143,7 @@ module pegs (g,rm,n) {
 		else {
 		assign (conang=45)
 			rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*conang]) {
+				echo("conang less than 45");
 				for (k=[0:3]){
 					rotate ([0,0,-arcang/3*k*((i%2)*2-1)-10]) translate ([radm,0,0]) peg(r=3,h=3,s=1);//tweaked
 				}

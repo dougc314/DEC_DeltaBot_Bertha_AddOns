@@ -8,7 +8,8 @@ plateRad = 14/2*24.5;
 plateThk = 0.25*25.4;
 plateLift = 15; // bottom of plate to top of 2060 triangle
 legLift = 10; //how much the leg lifts the plate
-springLift = 10; // how much the spring liftd the plate (apx)
+springod = 0.218*25.4;
+springLift = 10; // how much the spring lifts the plate (apx)
 
 //plate ();
 //leg();
@@ -35,10 +36,11 @@ hull() {
 support_arm(leg=true);
 support_arm (arm=true);
 
+
 module support_arm (arm=false,leg=false){
 	beamTop = 30; // distance to center of triangle 2060
 	triRad = 150; //radius of inscribed circle
-	supportThk=10;
+	supportThk=15;
 	plateHgt = beamTop+plateLift; //bottom of plate
 	supportHgt= plateHgt-legLift-springLift-supportThk;
 	supportRad=plateRad;
@@ -85,7 +87,11 @@ module support_arm (arm=false,leg=false){
 		}
 		translate ([0,bedDelta+(bodyLen-overHang)/2,supportHgt]) {
 				cylinder (r=bolt_rad,h=supportThk*2); //screw hole
-				translate ([0,0,0]) cylinder (r=nut_rad,h=nut_height,$fn=6);  //nut hole
+				//translate ([0,0,0]) cylinder (r=nut_rad,h=nut_height,$fn=6);  //nut hole - cant be a hole in the bottom
+				translate ([0,5,5]) hull () {  //open ended, bottom supported well for a 5mm nylon lock nut
+					translate ([-8.1/2,0,0]) cube ([8.1,8,5.1]);
+					translate ([0,-5,0]) rotate ([0,0,30]) cylinder (r=9/2,h=5.1 , $fn=6);
+				}
 				translate ([0,0,supportThk-springRad]) cylinder (r=springRad+1,h=springRad); //spring well
 		}	
 	}
@@ -96,7 +102,7 @@ module support_arm (arm=false,leg=false){
 	bodyLen=30;
 	bodyHgt = legLift + plateThk + overTop;
 	rad = 3;  //corner rads
-	springRad = 4;
+	springRad = springod/2;
 	if (leg==true)
 		//translate ([0,0,bodyWid/2]) rotate ([90,0,0]) {//place for printing
 		translate ([0,bedDelta,supportHgt+supportThk+springLift]) rotate ([0,0,0]) { //for placement analysis 
@@ -157,3 +163,6 @@ module leg (){
 }
 
 module plate (r=plateRad,h=plateThk) { cylinder (r=r,h=h,$fn=32); }
+
+
+
