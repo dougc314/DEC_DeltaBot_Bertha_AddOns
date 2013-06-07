@@ -27,7 +27,9 @@ rotate ([0,0,90]) {
 */
 //sprials();
 //serpentine_jig_22ga ();
-serpentine_jig_26ga();
+//serpentine_jig_26ga();
+//serpentine_jig_24ga();
+serpentine_jig_28ga();
 
 
 //arcwall (r=100,h=5,t=1,s=8,a=45);
@@ -59,7 +61,17 @@ module serpentine_jig_26ga(){
 	translate ([0,0,3]) pegs(g=15,rm=170,n=10,wedges=5);
 }
 
+module serpentine_jig_24ga(){
+	arcs(g=15,rm=170,n=10,wedges=4);	
+	$fn=16;
+	translate ([0,0,3]) pegs(g=15,rm=170,n=10,wedges=4);
+}
 
+module serpentine_jig_28ga(){
+	arcs(g=18.8,rm=170,n=8,wedges=6);	
+	$fn=16;
+	translate ([0,0,3]) pegs(g=18.8,rm=170,n=8,wedges=6);
+}
 
 
 
