@@ -1,4 +1,4 @@
-include <effectors.scad>;
+//include <effectors.scad>;  //effectors and brackets use the same variable namse and whack the other
 include <brackets.scad>;
 include <stepper-motors.scad>;
 include <bedmtg.scad>;
@@ -32,6 +32,47 @@ render (convexity=10) tri_sides();
 	support_arm (arm=true);
 
 }*/
+
+rotate ([0,0,-30]) translate ([-135/2-32,-75/2,6])rumba();
+rotate ([0,0,-30]) translate ([-35,0,-3]) rumba_plate ();
+
+bottom_plate ();
+//top_plate ();  
+
+module rumba_plate () {
+  cube ([140,80,6], center=true); 
+}
+
+rotate ([0,0,-30]) translate ([60,0,30]) rotate ([0,90,0]) 60mmfan ();
+
+module 60mmfan () {
+	cube ([60,60,25],center=true);
+}
+
+module top_plate () {
+	translate ([0,0,-6+60]) {
+		intersection () {
+			  rotate ([0,0,30]) cylinder (r=tri_rad-22,h=6,$fn=3);
+			rotate ([0,0,-30]) cylinder (r=tri_rad-bracket_offset,h=6,$fn=3);
+		}
+	}
+}
+
+module bottom_plate (){
+	difference () {
+		translate ([0,0,-6]) {
+			intersection () {
+				rotate ([0,0,30]) cylinder (r=tri_rad+20,h=6,$fn=3);
+				rotate ([0,0,-30]) cylinder (r=tri_rad-bracket_offset,h=6,$fn=3);
+			}
+		}
+		rotate ([0,0,-30]) translate ([-145/2-35,-85/2,-6]) cube ([145,85,6]);	
+	}
+}
+
+
+
+
 //NEMA (NEMA17);
 //#cylinder (r=inCircleRad,h=60);
 

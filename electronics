@@ -1,6 +1,7 @@
-//include <declib.scad>
+include <declib.scad>
 //uxcell_power_entry();
-24V_supply();
+//24V_supply();
+//rumba ();
 
 module uxcell_power_entry () {
 
@@ -34,6 +35,8 @@ module 24V_supply () {
 		translate ([xdim/2-25/2,0,8]) cube ([25,ydim-2,zdim-8],center=true);
 	}
 }
+
+
 
 
 /*

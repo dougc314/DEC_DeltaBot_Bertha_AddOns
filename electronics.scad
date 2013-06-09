@@ -1,5 +1,6 @@
 include <declib.scad>
 //supply_model ();
+//rumba ();
 
 module supply_model () {
 	translate ([4.4*25.4+10,-4.7/2*25.4+50/2+2,2.2/2*25.4-30/2]) rotate ([0,90,0]) uxcell_power_entry();
@@ -39,7 +40,9 @@ module 24V_supply () {
 	}
 }
 
-
+module rumba () {
+	translate ([-10,-10,0]) import ("rumba.stl");
+}
 
 
 
