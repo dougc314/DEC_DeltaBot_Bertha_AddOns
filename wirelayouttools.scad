@@ -1,14 +1,13 @@
 
 
 
-//wedges=4; //clumsy here, needs to ba a passed parameter
-//wedgeang=360/wedges;  // clumsy here just pass wegdes and calculate in module
+
 pi = 3.1415789;
 ni = 1.0905e-3;  //bulk resistivity of 80-20 Nichrome wire Ohm-mm
 rm=170;
 watts = 250;
 volts=23;
-echo (res(watts,volts)*4,awg_dia(22),wire_len(watts/wedges,volts,22,ni));
+
 
 /*
 union() {
@@ -52,25 +51,28 @@ rotate ([0,0,0]) arche_wall (ro=170,ri=42*3/3,gap=42,h=3,t=5,s=360);
 module serpentine_jig_22ga(){
 	arcs(g=10,rm=170,n=16,wedges=4);	
 	$fn=16;
-	translate ([0,0,3]) pegs(g=10,rm=170,n=16,wedges=4);
+	translate ([0,0,3]) pegs(g=10,rm=170,n=16,wedges=4,sw=awg_dia(22)*1.5);				
 }
 
 module serpentine_jig_26ga(){
 	arcs(g=15,rm=170,n=10,wedges=5);	
 	$fn=16;
-	translate ([0,0,3]) pegs(g=15,rm=170,n=10,wedges=5);
+	translate ([0,0,3]) pegs(g=15,rm=170,n=10,wedges=5,sw=awg_dia(26)*1.5);
+
 }
 
 module serpentine_jig_24ga(){
 	arcs(g=15,rm=170,n=10,wedges=4);	
 	$fn=16;
-	translate ([0,0,3]) pegs(g=15,rm=170,n=10,wedges=4);
+	translate ([0,0,3]) pegs(g=15,rm=170,n=10,wedges=4,sw=awg_dia(24)*1.5);
+		
+	
 }
 
 module serpentine_jig_28ga(){
 	arcs(g=18.8,rm=170,n=8,wedges=6);	
 	$fn=16;
-	translate ([0,0,3]) pegs(g=18.8,rm=170,n=8,wedges=6);
+	translate ([0,0,3]) pegs(g=18.8,rm=170,n=8,wedges=6,sw = awg_dia(28)*1.5);
 }
 
 
@@ -109,32 +111,47 @@ module arcs_slots (g,rm,n) {
 
  module arcs (g,rm,n,wedges){
 	
+	
 	union (){
 		for (i=[0:n-1]){
-			assign (radm = rm-g*i) assign (radc = radm-g/2) assign ( wedgeang=360/wedges) assign (arcang=arcangle(radc,g,wedgeang)) assign (conang = g/(2*pi*radc)*360)
-			if(conang<45) {
-				rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*conang]) {  
+			assign (radm = rm-g*i) assign (radc = radm-g/2) assign ( wedgeang=360/wedges) assign (arcang=arcangle(radc,g,wedgeang)) assign (conang = g/(2*pi*radc)*360) 
+			assign (stiffang = g/(2*pi*(radc+g))*360)
+			if(conang<wedgeang/2) {
+				rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*conang]) {  //puts the connector arcs g (along the cirfumference) away from the wedge edges, alternating
 					union() {
-						translate ([radc,0,0]) scale ([1,(i%2)*2-1,1]) arcwall (r=g/2,h=3,t=5,s=8,a=180); 
-						arcwall(r=radm,h=3,t=5,s=8,a=((i%2)*2-1)*-arcang);
+						translate ([radc,0,0]) {
+							scale ([1,(i%2)*2-1,1]) arcwall (r=g/2,h=3,t=5,s=8,a=180);  //the half circle connector							
+							if (i>0) rotate ([0,0,conang*((i%2)*2-1)]) translate ([g,0,0]) cylinder (r=g/2,h=3);  //stiffener dot	
+						}
+						arcwall(r=radm,h=3,t=5,s=8,a=((i%2)*2-1)*-arcang);  //the arc
+						if (i==0) {
+							for (ti=[0:2]) {
+								tape_holder (rad=radm+10,ang=(arcang)/3*(ti+0.5)-2.5); //translate ([180,0,0]) cylinder (r=1,h=6);
+							}
+						}
 					}
 					echo("conang: ",conang);
 				}
 			}	
 			else { 
-			assign(conang=45)
-				rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*conang]) {  
+			assign(tweakconang=wedgeang/2)
+				rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*tweakconang]) {  
 					union() {
-						translate ([radc,0,0]) scale ([1,(i%2)*2-1,1]) arcwall (r=g/2,h=3,t=5,s=8,a=180); 
-						rotate ([0,0,-18]) arcwall(r=radm,h=3,t=5,s=8,a=((i%2)*2-1)*-arcang);
+					translate ([radc,0,0]) scale ([1,(i%2)*2-1,1]) arcwall (r=g/2,h=3,t=5,s=8,a=180); 
+						rotate ([0,0,(tweakconang-conang)/2]) arcwall(r=radm,h=3,t=5,s=8,a=((i%2)*2-1)*-arcang);
+						//rotate ([0,0,conang*((i%2)*2-1)]) translate ([g,0,0]) cylinder (r=g/2,h=3);  //stiffener dot	
 					}
-				}
-				
-
+				}		
 			}
 		}
 	}
 }
+
+module tape_holder  (ang,rad) {
+	rotate ([0,0,ang]) arcwall (r=rad,a=5,t=5,s=4,h=3);
+	rotate ([0,0,ang])translate ([rad-5,0,1.5]) cube ([10,5,3], center=true);
+	rotate ([0,0,ang+5])translate ([rad-5,0,1.5]) cube ([10,5,3], center=true);	
+}	
 
 module slots (g,rm,n){
 	union() {
@@ -150,28 +167,34 @@ module slots (g,rm,n){
 	}
 }
 
-module pegs (g,rm,n,wedges) {
+module pegs (g,rm,n,wedges,sw) {
 
 	for (i=[0:n-1]){
-		assign (radm = rm-g*i) assign (radc = radm-g/2) assign (wedgeang=360/wedges) assign (arcang=arcangle(radc,g,wedgeang)) assign (conang = g/(2*pi*radc)*360)
-		if (conang<45){
+		//the calculation of pegn is a bit of a fudge but seems to work
+		assign (radm = rm-g*i) assign (radc = radm-g/2) assign (wedgeang=360/wedges) assign (arcang=arcangle(radc,g,wedgeang)) assign (conang = g/(2*pi*radc)*360) assign (arclen = (rm-g*i)*2*pi/360*arcang) 
+		assign (  pegn = min(4,round(arclen/12)))
+		if (conang<wedgeang/2){
 			rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*conang]) {
-				for (k=[0:3]){
-					rotate ([0,0,-arcang/3*k*((i%2)*2-1)]) translate ([radm,0,0]) peg(r=3,h=3,s=1);
+			
+			
+				for (k=[0:pegn-1]){
+					 if ((k>0) && (k < (pegn-1))) rotate ([0,0,-arcang/(pegn-1)*k*((i%2)*2-1)]) translate ([radm,0,0]) peg(r=3,h=3,s=sw); // put the if  in front to remove the end pegs: if ((k>0) && (k < (pegn-1)))
 				}
-				rotate ([0,0,conang/2*((i%2)*2-1)]) translate ([radc,0,0]) rotate ([0,0,90]) peg(r=3,h=3,s=1);
+				//rotate ([0,0,conang/2*((i%2)*2-1)]) translate ([radc,0,0]) rotate ([0,0,90]) peg(r=3,h=3,s=sw+.5);// corner pegs have bigger slots
+				translate ([radc,0,-3]) rotate ([0,0,90]) peg(r=g/2,h=6,s=0); //big peg just wrap around it, 0 slot worked!
 			}
 		}
-		else {
-		assign (conang=45)
-			rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*conang]) {
-				echo("conang less than 45");
+		else { 
+		assign (tweakconang=wedgeang/2)
+			rotate ([0,0,wedgeang*(i%2)-1*((i%2)*2-1)*tweakconang]) {
+				echo("conang set to wedgeang/2");
 				for (k=[0:3]){
-					rotate ([0,0,-arcang/3*k*((i%2)*2-1)-10]) translate ([radm,0,0]) peg(r=3,h=3,s=1);//tweaked
+					rotate ([0,0,-arcang/3*k*((i%2)*2-1)]) translate ([radm,0,0]) peg(r=3,h=3,s=sw);//tweaked
 				}
-				rotate ([0,0,conang/2*((i%2)*2-1)+12.5]) translate ([radc,0,0]) rotate ([0,0,70]) peg(r=3,h=3,s=1); //tweaked
+				rotate ([0,0,conang/2*((i%2)*2-1)]) translate ([radc,0,0]) rotate ([0,0,70]) peg(r=3,h=3,s=sw+.5); //tweaked
 			}
 		}
+	
 	}
 }
 

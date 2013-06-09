@@ -24,7 +24,7 @@ $fn=32;
 
 
 //motor
-//bracket(motor=true);
+bracket(motor=true);
 
 //for switch mount DEC
 //translate ([0,17,5]) rotate ([-90,0,0]) switch(); //for placement modeling

@@ -33,8 +33,8 @@ hull() {
 
 */
 //cube ([500,500,.001],center=true);
-support_arm(leg=true);
-support_arm (arm=true);
+//support_arm(leg=true);
+//support_arm (arm=true);
 
 
 module support_arm (arm=false,leg=false){

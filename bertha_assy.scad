@@ -2,6 +2,7 @@ include <effectors.scad>;
 include <brackets.scad>;
 include <stepper-motors.scad>;
 include <bedmtg.scad>;
+include <electronics.scad>;
 
 
 
@@ -20,20 +21,22 @@ or_flat=19.5;
 or_thick=2.37;
  
  
-//render (convexity=10) brackets();
+render (convexity=10) brackets();
 render (convexity=10) tri_sides();
-render (convexity=10) posts();
+//render (convexity=10) posts();
 //render (convexity=10) rail_effectors();
 //translate ([0,0,470]) hotend_effector();
-translate ([0,0,60+plateLift]) plate();
-translate ([0,inCircleRad+10,30]) {
+//translate ([0,0,60+plateLift]) plate();
+/*translate ([0,inCircleRad+10,30]) {
 	support_arm(leg=true);
 	support_arm (arm=true);
 
-}
+}*/
 //NEMA (NEMA17);
-#cylinder (r=inCircleRad,h=60);
+//#cylinder (r=inCircleRad,h=60);
 
+
+//goofy ideas start
 //gusset plates
 /*
 //translate ([-60,-tri_rad+60,0,970]) rotate ([90,0,-60]) cube ([60,60,5]);
@@ -66,6 +69,11 @@ color ("red"){
 
 
 
+
+
+//goofy ideas stop
+
+
 module rail_effectors(){
 	for (a=[0:2]){
 		rotate ([0,0,a*120]) translate ([0,-tri_rad+bracket_offset+23.3,870]) rotate ([90,0,0]) rail_effector_assy ();
@@ -91,7 +99,7 @@ module tri_sides () {
 	for (a=[0:2]) {
 		rotate ([0,0,a*120]){
 			rotate ([90,0,90])translate ([tri_rad/2,30,0]) extrusion (extrusion_len);
-			translate ([0,0,940]) rotate ([90,0,90])translate ([tri_rad/2,30,0]) extrusion (extrusion_len);
+			//translate ([0,0,940]) rotate ([90,0,90])translate ([tri_rad/2,30,0]) extrusion (extrusion_len);
 		}
 	}
 }
@@ -102,8 +110,8 @@ module brackets () {
 			 color (tower_colors[a]) bracket(motor=true);
 			translate ([0,0,940]) {
 				color (tower_colors[a]) {
-					bracket(motor=false);
-					idler();
+					//bracket(motor=false);
+					//idler();
 				}
 			}
 		}
