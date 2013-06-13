@@ -1,0 +1,4 @@
+include <declib.scad>;
+
+radplate (xwid=40,ywid=40, thk=5);
+

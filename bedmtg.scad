@@ -33,11 +33,14 @@ hull() {
 
 */
 //cube ([500,500,.001],center=true);
-//support_arm(leg=true);
-//support_arm (arm=true);
+//support_arm(clip=true);
+rotate ([90,0,0]) support_arm (arm=true);  //90 in x for printing
 
 
-module support_arm (arm=false,leg=false){
+
+
+
+module support_arm (arm=false,clip=false){
 	beamTop = 30; // distance to center of triangle 2060
 	triRad = 150; //radius of inscribed circle
 	supportThk=15;
@@ -103,9 +106,9 @@ module support_arm (arm=false,leg=false){
 	bodyHgt = legLift + plateThk + overTop;
 	rad = 3;  //corner rads
 	springRad = springod/2;
-	if (leg==true)
-		//translate ([0,0,bodyWid/2]) rotate ([90,0,0]) {//place for printing
-		translate ([0,bedDelta,supportHgt+supportThk+springLift]) rotate ([0,0,0]) { //for placement analysis 
+	if (clip==true)
+		translate ([0,0,bodyWid/2]) rotate ([0,90,0]) {//place for printing
+		//translate ([0,bedDelta,supportHgt+supportThk+springLift]) rotate ([0,0,0]) { //for placement analysis 
 		difference (){//body
 			union(){
 				translate ([0,bodyLen/2-overHang,0])   //([0,-bodyLen/2+overHang,0]) 
@@ -133,7 +136,7 @@ module support_arm (arm=false,leg=false){
 	}
 }  
 
-module leg (){
+module mirror_clip (){
 	// make a clip that can hold the heated bed
 	overTop=4;  //thickness of top overHang
 	overHang=10; //length of overHang

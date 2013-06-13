@@ -18,7 +18,7 @@ radius = 40;
 extruder_rad = 25;
 center_rad = 15;
 igus_rad = 6/2;
-shroud_height = 40;	//height of fan shroud.  Adjust based on extruder.
+shroud_height = 28;	//height of fan shroud.  Adjust based on extruder.
 
 //%translate([0,0,0]) cylinder(r=extruder_rad, h=1);
 %rotate([0,0,30]) cylinder(r=center_rad/cos(60), h=1, $fn=3);
@@ -26,7 +26,7 @@ shroud_height = 40;	//height of fan shroud.  Adjust based on extruder.
 
 //rail_effector();
 //adjustable_wheel();
-//hotend_effector();
+hotend_effector();
 //translate([0,33,0])
 //hotend_clamp();
 //translate([0,-33,0]) rod_end();

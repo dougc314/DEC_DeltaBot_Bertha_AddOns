@@ -14,7 +14,7 @@ module obround (rlen,rwid,hgt){
 }
 
 		
-module radplate (xwid,ywid,rad,thk){
+module radplate (xwid=5,ywid=5,rad=1,thk=1){
 	hull(){
 		translate ([xwid/2-rad,ywid/2-rad,0]) cylinder (r=rad,h=thk,$fn=16);
 		translate ([xwid/2-rad,ywid/-2+rad,0]) cylinder (r=rad,h=thk,$fn=16);

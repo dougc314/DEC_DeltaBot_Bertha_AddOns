@@ -21,7 +21,7 @@ $fn=32;
 //bracket(motor=false);
 //translate([0,-15,0])
 //idler();
-
+switch_bracket_screwed();
 
 //motor
 //bracket(motor=true);
@@ -216,10 +216,15 @@ module switch_bracket_screwed() {
 				
 			}
 			translate ([0,-20,-5]) cylinder (r=bolt_cap_rad+0.5,h=5,center=false);//head clearance
-			translate ([0,-20.25,-9]) rotate ([0,0,0]) { //switch holes for plastic screws
-				#translate ([9.5/2,-2.4,0]) cylinder (r=0.95,h=10,center=true);
+			translate ([0,-20.25,-9]) rotate ([0,0,0]) { //large switch holes for plastic screws
+				translate ([9.5/2,-2.4,0]) cylinder (r=0.95,h=10,center=true);
 				translate ([-9.5/2,-2.4,0]) cylinder (r=0.95,h=10,center=true);
 			}	
+			translate ([0,-20.25,-9]) rotate ([0,0,0]) { //small switch holes for plastic screws
+				#translate ([3.25,-4.6,0]) cylinder (r=0.75,h=10,center=true);
+				translate ([-3.25,-4.6,0]) cylinder (r=0.75,h=10,center=true);
+			}	
+			
 		}
 	}
 } 
