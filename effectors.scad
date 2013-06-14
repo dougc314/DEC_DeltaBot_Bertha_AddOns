@@ -26,9 +26,9 @@ shroud_height = 28;	//height of fan shroud.  Adjust based on extruder.
 
 //rail_effector();
 //adjustable_wheel();
-hotend_effector();
+//hotend_effector();
 //translate([0,33,0])
-//hotend_clamp();
+hotend_clamp();
 //translate([0,-33,0]) rod_end();
 
 module hotend_effector(){
@@ -172,17 +172,17 @@ module hotend_clamp(){
 			//hotend block
 			translate([0,0,bracket_thick/2]) cube([bracket_width, bracket_height, bracket_thick], center=true);
 			//pushfit connector   //dec
-			difference () {
+		difference () {
 				translate([0,bracket_height/2,0]) {
-					translate([0,pushfit_rad/2,(bracket_thick+pushfit_rad+wall)/2+.5]) cube([bracket_width, pushfit_rad, bracket_thick+pushfit_rad+1+wall], center=true);
-					translate([0,pushfit_rad/2,bracket_thick+1]) rotate([90,0,0]) cylinder(r=pushfit_rad+wall*2/2, h=pushfit_rad, center=true);
+					translate([0,pushfit_rad,(bracket_thick+pushfit_rad+wall)/2+.5]) cube([bracket_width, pushfit_rad*2, bracket_thick+pushfit_rad+1+wall], center=true);
+					translate([0,pushfit_rad,bracket_thick+1]) rotate([90,0,0]) cylinder(r=pushfit_rad+wall*2/2, h=pushfit_rad*2, center=true);
 				}
-				rotate ([90,0,0]) translate ([0,16,-15]) obloid_thingy();
+				rotate ([90,0,0]) translate ([0,16,-23]) #obloid_thingy();
 			}
 		}
 
 		//pushfit hole
-		translate([0,bracket_height/2,bracket_thick+1]) rotate([90,0,0]) cylinder(r=pushfit_rad, h=15, center=true, $fn=72);
+		translate([0,bracket_height/2,bracket_thick+1]) rotate([90,0,0]) cylinder(r=pushfit_rad, h=25, center=true, $fn=72);
 
 		//hotend hole
 		difference(){
@@ -207,20 +207,20 @@ module hotend_clamp(){
 module obloid_thingy (){ //dec
 	union() {
 		difference () {
-			translate ([-pushfit_rad*6,0,0]) cube ([pushfit_rad*12,pushfit_rad*4,10]);	
-			translate ([0,-pushfit_rad,0]) cylinder (r=pushfit_rad+wall*2/2, h=10);			
+			translate ([-pushfit_rad*6,0,0]) cube ([pushfit_rad*12,pushfit_rad*4,18]);	
+			translate ([0,-pushfit_rad,0]) cylinder (r=pushfit_rad+wall*2/2, h=18);			
 			//translate ([pushfit_rad*2,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=10);		
 			//translate ([-pushfit_rad*3,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=10);	
 		}
 		union () {
 
 			hull () {
-				translate ([3*pushfit_rad-1.2,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=10);
-				translate ([6*pushfit_rad,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=10);
+				translate ([3*pushfit_rad-1.2,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=18);
+				translate ([6*pushfit_rad,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=18);
 			}	
 			hull () {
-				translate ([-3*pushfit_rad+1.3,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=10);
-				translate ([-6*pushfit_rad,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=10);
+				translate ([-3*pushfit_rad+1.3,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=18);
+				translate ([-6*pushfit_rad,0,0]) cylinder (r1=pushfit_rad,r2=pushfit_rad,h=18);
 			}
 		}
 	}
