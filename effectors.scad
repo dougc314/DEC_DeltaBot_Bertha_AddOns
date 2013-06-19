@@ -4,8 +4,8 @@ rail_width=25.4649;
 v_rad = 9.77;
 arm_sep = 70;
 
-hotend_rad = 8;
-hotend_groove_rad=6;
+hotend_rad = 8.125;
+hotend_groove_rad=6.125;
 
 rod_end_thickness = 8;
 
@@ -18,17 +18,81 @@ radius = 40;
 extruder_rad = 25;
 center_rad = 15;
 igus_rad = 6/2;
-shroud_height = 28;	//height of fan shroud.  Adjust based on extruder.
+shroud_height = 28;	//JHEAD height of fan shroud.  Adjust based on extruder.
 
 //%translate([0,0,0]) cylinder(r=extruder_rad, h=1);
 %rotate([0,0,30]) cylinder(r=center_rad/cos(60), h=1, $fn=3);
 
+fan_holder();
+module fan_holder(){
+	// main shroud
+	difference () {
+		union() {
+			difference () {
+				hull () {
+					translate ([0,0,-8]) rotate ([0,0,30]) cylinder (r=36,h=8,$fn=3);
+					translate ([0,0,-25]) cube ([40,40,.001],center=true);
+				}
+				scale ([0.875,0.875,1])hull () {
+					translate ([0,0,-8]) rotate ([0,0,30]) cylinder (r=36,h=8,$fn=3);
+					translate ([0,0,-25]) cube ([40,40,.001],center=true);
+				}
+			}
+			translate ([0,20,-14.5]) difference () {
+				cylinder (r=12,h=14.5); //clamp boss
+				translate ([-12,0,0]) cube ([24,12,14.5]);
+			}
+		
+			rotate ([0,0,120]) translate ([0,20,-14.5])	difference () {
+				cylinder (r=12,h=14.5); //clamp boss
+				translate ([-12,4,0]) cube ([24,8,14.5]);
+			}
+			rotate ([0,0,-120]) translate ([0,20,-14.5])	difference () {
+				cylinder (r=14,h=14.5); //clamp boss
+				translate ([-14,4,0]) cube ([28,10,14.5]);
+			}
+			union() { //fanmtg bosses
+				translate ([16,16,-25]) cylinder (r=3,h=25);
+				translate ([-16,-16,-25]) cylinder (r=3,h=25);
+				translate ([16,-16,-25]) cylinder (r=3,h=25);
+				translate ([-16,16,-25]) cylinder (r=3,h=25);
+			}
+		}
+		//clamp clearance
+		translate ([0,20,-12.5]) cylinder (r=10,h=12.5);
+		rotate ([0,0,120]) translate ([0,20,-12.5]) cylinder (r=10,h=12.5);		
+		rotate ([0,0,-120]) translate ([0,20,-12.5]) cylinder (r=12,h=12.5);	
+		//fanmtg holes
+		translate ([16,16,-25]) cylinder (r=1,h=26);
+		translate ([-16,-16,-25]) cylinder (r=1,h=26);
+		translate ([16,-16,-25]) cylinder (r=1,h=26);
+		translate ([-16,16,-25]) cylinder (r=1,h=26);		
+	}
+
+/*	//fanmtg
+	difference () {
+		union() {
+			translate ([16,16,-25]) cylinder (r=3,h=25);
+			translate ([-16,-16,-17]) cylinder (r=3,h=17);
+			translate ([16,-16,-17]) cylinder (r=3,h=17);
+			translate ([-16,16,-17]) cylinder (r=3,h=17);
+		}
+		translate ([16,16,-25]) cylinder (r=1,h=30);
+		translate ([-16,-16,-17]) cylinder (r=1,h=17);
+		translate ([16,-16,-17]) cylinder (r=1,h=17);
+		translate ([-16,16,-17]) cylinder (r=1,h=17);
+	}*/
+}
+
+
+
+
 
 //rail_effector();
 //adjustable_wheel();
-//hotend_effector();
+hotend_effector();
 //translate([0,33,0])
-hotend_clamp();
+translate ([0,35,8]) rotate ([90,180,0])  hotend_clamp(); //translate ([0,35,8]) rotate ([90,180,0]) 
 //translate([0,-33,0]) rod_end();
 
 module hotend_effector(){
@@ -55,7 +119,7 @@ module hotend_effector(){
 			fan_shroud();
 
 			//anchor
-			#for(i=[0:120:359]) rotate([0,0,i])
+			for(i=[0:120:359]) rotate([0,0,i])
 				translate([-wall/4,0,0]) cube([wall/2,extruder_rad/2,wall/2]);
 		}
 
@@ -85,7 +149,7 @@ module hexamid(){
 		}
 
 		//translate([0,0,-wall]) rotate([0,0,-30]) cylinder(r1=body_rad/cos(180/3), r2=0, height, $fn=3);
-		#translate([0,0,0]) sphere(r=36, $fn=36);
+		translate([0,0,0]) sphere(r=36, $fn=36);
 
 		rotate([0,0,30]) cylinder(r=center_rad/2+wall, h=100, $fn=3);
 	}
@@ -156,12 +220,13 @@ bracket_thick = wall*2;
 bracket_width = 40;
 
 pushfit_dia = 10;
+pushfit_len=6.75;
 pushfit_rad = pushfit_dia/2;
 pushfit_thread_dia = 6;
 pushfit_thread_rad = pushfit_thread_dia/2;
 
 groove_height = 4.4; //dec
-groove_rad = 6;
+groove_rad = 6.125;
 groove_top = 5.1; //dec
 
 //holds the extruder on
@@ -174,15 +239,15 @@ module hotend_clamp(){
 			//pushfit connector   //dec
 		difference () {
 				translate([0,bracket_height/2,0]) {
-					translate([0,pushfit_rad,(bracket_thick+pushfit_rad+wall)/2+.5]) cube([bracket_width, pushfit_rad*2, bracket_thick+pushfit_rad+1+wall], center=true);
-					translate([0,pushfit_rad,bracket_thick+1]) rotate([90,0,0]) cylinder(r=pushfit_rad+wall*2/2, h=pushfit_rad*2, center=true);
+					translate([0,pushfit_len/2,(bracket_thick+pushfit_rad+wall)/2+.5]) cube([bracket_width, pushfit_len, bracket_thick+pushfit_rad+1+wall], center=true);
+					translate([0,pushfit_len/2,bracket_thick+1]) rotate([90,0,0]) cylinder(r=pushfit_rad+wall*2/2, h=pushfit_len, center=true);
 				}
-				rotate ([90,0,0]) translate ([0,16,-23]) #obloid_thingy();
+				rotate ([90,0,0]) translate ([0,16,-23]) obloid_thingy();
 			}
 		}
 
 		//pushfit hole
-		translate([0,bracket_height/2,bracket_thick+1]) rotate([90,0,0]) cylinder(r=pushfit_rad, h=25, center=true, $fn=72);
+		translate([0,bracket_height/2+pushfit_len+.01,bracket_thick+1]) rotate([90,0,0]) cylinder(h=pushfit_len+.02, r1=9.85/2,r2=9.35/2, $fn=25);	//cylinder(r=pushfit_rad, h=.001, center=false, $fn=72);
 
 		//hotend hole
 		difference(){
@@ -191,6 +256,8 @@ module hotend_clamp(){
 			translate([0,bracket_height/2-groove_top-groove_height/2,bracket_thick+1]) rotate([90,0,0]) difference() {
 				cylinder(r=hotend_rad, h=groove_height, center=true, $fn=72);
 				cylinder(r=groove_rad, h=groove_height+.2, center=true, $fn=72);
+				//translate ([0,0,0]) cylinder(r2=hotend_rad+2,r1=4,h=4);
+				#translate ([0,0,-groove_height+1.5]) cylinder(r1=hotend_rad,r2=4,h=4);				
 			}
 		}
 		translate([0,bracket_height/2,bracket_thick+1]) rotate([90,0,0]) cylinder(r=hotend_rad+1, h=.5);
@@ -380,12 +447,12 @@ module arm_mounts(solid = 1){
 		translate([wall+10,0,0]) cube([20,25,arm_sep],center=true);
 
 		//make sure the rod can't hit anything
-		#render() for(i=[0,1]) mirror([0,0,i]) translate([0,0,arm_sep/2+rod_end_thickness/2]) rod_end_sweep();
+		render() for(i=[0,1]) mirror([0,0,i]) translate([0,0,arm_sep/2+rod_end_thickness/2]) rod_end_sweep();
 	}
 }
 
 module rod_end_sweep(){
-	#difference(){
+	difference(){
 		sphere(r=9.5, $fn=36);
 		for(i=[0,1]) mirror([0,0,i]) translate([0,0,rod_end_thickness/2-.1]) cylinder(r1=igus_rad, r2=36, h=((36-igus_rad)/2)/sqrt(3),$fn=12);
 	}
